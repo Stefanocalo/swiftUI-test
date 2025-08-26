@@ -29,7 +29,7 @@ struct ContentView: View {
                 HStack{
                     
                     Button(action: {
-                        print("Tapped on item 1")
+                        print("Tapped on item Ant")
                     }, label: {Text("Ant")} )
                     .font(.body)
                     .multilineTextAlignment(.center)
@@ -37,7 +37,7 @@ struct ContentView: View {
                     .border(accentColor, width: 4)
                     
                     Button(action: {
-                        print("Tapped on item 2")
+                        print("Tapped on item Beetle")
                     }, label: {Text("Beetle")})
                     .font(.body)
                     .multilineTextAlignment(.center)
@@ -45,7 +45,7 @@ struct ContentView: View {
                     .border(accentColor, width: 4)
                     
                     Button(action: {
-                        print("Tapped on item 3")
+                        print("Tapped on item Moth")
                     }, label: {Text("Moth")})
                     .font(.body)
                     .multilineTextAlignment(.center)
@@ -53,7 +53,7 @@ struct ContentView: View {
                     .border(accentColor, width: 4)
                     
                     Button(action: {
-                        print("Tapped on item 4")
+                        print("Tapped on item Fly")
                     }, label: {Text("Fly")})
                     .multilineTextAlignment(.center)
                     .padding()
