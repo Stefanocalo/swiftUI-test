@@ -6,62 +6,92 @@
 //
 
 import SwiftUI
+import Foundation
 
 struct ContentView: View {
     
-    let mainColor = Color(red: 20/255, green: 28/255, blue: 58/255)
-    let accentColor = Color(red: 48/255, green: 105/255, blue: 240/255)
+    @State private var dictionary = ["Jason": 10, "Paul": 22]
+    @State private var selectedItem: String = ""
+    @State private var mainColor = Color(red: 20/255, green: 28/255, blue: 58/255)
+    @State private var questionCounter = 1
+    
+    let question = Question(questionText: "What was the first computer bug?",
+                            possibleAnswers: ["Ant", "Beetle", "Moth", "Fly"],
+                            correctAnswerIndex: 2)
+    
+    func getNextQuestion() {
+        withAnimation(.smooth) {
+            questionCounter += 1
+        }
+    }
     
     var body: some View {
+        
+
         ZStack {
             mainColor.ignoresSafeArea()
             VStack{
-                Text("1/10")
-                    .font(.callout)
-                    .multilineTextAlignment(.leading)
-                    .bold()
-                    .padding()
-                Text("What was the first computer bug?")
+                HStack{
+                    Text("\(questionCounter)")
+                        .id(questionCounter)
+                        .transition(.blurReplace.combined(with: .opacity))
+                        .font(.callout)
+                        .multilineTextAlignment(.leading)
+                        .bold()
+                    Text("/  10")
+                        .font(.callout)
+                        .multilineTextAlignment(.leading)
+                        .bold()
+                }
+                .padding()
+                Text(question.questionText)
                     .font(.largeTitle)
                     .bold()
                     .multilineTextAlignment(.leading)
-                Spacer()
                 HStack{
-                    
-                    Button(action: {
-                        print("Tapped on item Ant")
-                    }, label: {Text("Ant")} )
-                    .font(.body)
-                    .multilineTextAlignment(.center)
-                    .padding()
-                    .border(accentColor, width: 4)
-                    
-                    Button(action: {
-                        print("Tapped on item Beetle")
-                    }, label: {Text("Beetle")})
-                    .font(.body)
-                    .multilineTextAlignment(.center)
-                    .padding()
-                    .border(accentColor, width: 4)
-                    
-                    Button(action: {
-                        print("Tapped on item Moth")
-                    }, label: {Text("Moth")})
-                    .font(.body)
-                    .multilineTextAlignment(.center)
-                    .padding()
-                    .border(accentColor, width: 4)
-                    
-                    Button(action: {
-                        print("Tapped on item Fly")
-                    }, label: {Text("Fly")})
-                    .multilineTextAlignment(.center)
-                    .padding()
-                    .border(accentColor, width: 4)
-                    
+                    Text("You selected:")
+                        .font(.title2)
+                        .fontWeight(.light)
+                        .multilineTextAlignment(.leading)
+                    Text("\(selectedItem)")
+                        .font(.title2)
+                        .fontWeight(.bold)
+                        .padding(0)
+                        .multilineTextAlignment(.leading)
+                        .id(selectedItem)
+                        .transition(.scale.combined(with: .blurReplace))
+                        .multilineTextAlignment(.leading)
                 }
-            }
-            .foregroundColor(Color.white)
+                .padding(.vertical, 30)
+                
+                Spacer()
+                VStack {
+                    VStack {
+                        ForEach(question.possibleAnswers, id: \.self) { answer in
+                            Button(action: {
+                                getNextQuestion()
+                                print("Tapped on option with the text: \(answer)")
+                                withAnimation(.bouncy) {
+                                    selectedItem = answer
+//                                    mainColor = answer == question.possibleAnswers[question.correctAnswerIndex] ? .green : .red
+                                }
+                            }, label: {
+                                ChoiceTextView(choiceText: answer, selectedItem: selectedItem)
+                            })
+                            .disabled(selectedItem == answer)
+                            .frame(maxWidth: .infinity)
+
+                        }
+                    }
+                    .frame(maxWidth: .infinity)
+
+                }
+                .frame(maxWidth: .infinity)
+                VStack {
+                    NextQuestionButton(selectedItem: selectedItem)
+                }
+                .padding(.top)
+                }.foregroundColor(Color.white)
         }
             
     }
