@@ -75,10 +75,10 @@
 		3221BE5F2E1190F1007E1E52 = {
 			isa = PBXGroup;
 			children = (
-				3221BE6A2E1190F1007E1E52 /* Code History */,
 				3221BE782E1190F6007E1E52 /* Code HistoryTests */,
 				3221BE822E1190F6007E1E52 /* Code HistoryUITests */,
 				3221BE692E1190F1007E1E52 /* Products */,
+				3221BE6A2E1190F1007E1E52 /* Code History */,
 			);
 			sourceTree = "<group>";
 		};

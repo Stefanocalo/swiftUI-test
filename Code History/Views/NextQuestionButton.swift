@@ -9,8 +9,9 @@ import SwiftUI
 
 struct NextQuestionButton: View {
     var selectedItem: String
+    var action: () -> Void
     var body: some View {
-        Button(action: {print("Pressed!")}, label: {Text("Next question")})
+        Button(action: {action()}, label: {Text("Next question")})
             .frame(maxWidth: .infinity)
             .padding()
             .multilineTextAlignment(.leading)
@@ -23,5 +24,5 @@ struct NextQuestionButton: View {
 }
 
 #Preview {
-    NextQuestionButton(selectedItem: "")
+    NextQuestionButton(selectedItem: "f", action: {print("Pressed")})
 }

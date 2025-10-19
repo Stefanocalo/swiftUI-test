@@ -13,17 +13,7 @@ struct ContentView: View {
     @State private var dictionary = ["Jason": 10, "Paul": 22]
     @State private var selectedItem: String = ""
     @State private var mainColor = Color(red: 20/255, green: 28/255, blue: 58/255)
-    @State private var questionCounter = 1
-    
-    let question = Question(questionText: "What was the first computer bug?",
-                            possibleAnswers: ["Ant", "Beetle", "Moth", "Fly"],
-                            correctAnswerIndex: 2)
-    
-    func getNextQuestion() {
-        withAnimation(.smooth) {
-            questionCounter += 1
-        }
-    }
+    @State private var game = Game()
     
     var body: some View {
         
@@ -32,31 +22,28 @@ struct ContentView: View {
             mainColor.ignoresSafeArea()
             VStack{
                 HStack{
-                    Text("\(questionCounter)")
-                        .id(questionCounter)
+                    Text("\(game.currentQuestionIndex + 1)")
+                        .id(game.currentQuestionIndex)
                         .transition(.blurReplace.combined(with: .opacity))
                         .font(.callout)
                         .multilineTextAlignment(.leading)
                         .bold()
-                    Text("/  10")
+                    Text("/  \(game.totalQuestions())")
                         .font(.callout)
                         .multilineTextAlignment(.leading)
                         .bold()
                 }
                 .padding()
-                Text(question.questionText)
+                Text(game.currentQuestion().questionText)
                     .font(.largeTitle)
                     .bold()
+                    .padding(10)
                     .multilineTextAlignment(.leading)
                 HStack{
-                    Text("You selected:")
-                        .font(.title2)
-                        .fontWeight(.light)
-                        .multilineTextAlignment(.leading)
                     Text("\(selectedItem)")
-                        .font(.title2)
+                        .font(.title)
                         .fontWeight(.bold)
-                        .padding(0)
+                        .padding()
                         .multilineTextAlignment(.leading)
                         .id(selectedItem)
                         .transition(.scale.combined(with: .blurReplace))
@@ -67,9 +54,8 @@ struct ContentView: View {
                 Spacer()
                 VStack {
                     VStack {
-                        ForEach(question.possibleAnswers, id: \.self) { answer in
+                        ForEach(game.currentQuestion().possibleAnswers, id: \.self) { answer in
                             Button(action: {
-                                getNextQuestion()
                                 print("Tapped on option with the text: \(answer)")
                                 withAnimation(.bouncy) {
                                     selectedItem = answer
@@ -88,7 +74,16 @@ struct ContentView: View {
                 }
                 .frame(maxWidth: .infinity)
                 VStack {
-                    NextQuestionButton(selectedItem: selectedItem)
+                    NextQuestionButton(selectedItem: selectedItem, action: {
+                        let selectedIndex = game.currentQuestion().possibleAnswers.firstIndex(of: selectedItem)!
+                        game.makeGuessForCurrentQuestion(atIndex: selectedIndex)
+                        game.updateGameStatus()
+                        selectedItem = ""
+                        if game.isOver {
+                            print(game.hasWonGame())
+                            print(game.guessedPercentage())
+                        }
+                    })
                 }
                 .padding(.top)
                 }.foregroundColor(Color.white)
