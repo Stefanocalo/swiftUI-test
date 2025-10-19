@@ -21,13 +21,13 @@ struct ContentView: View {
         ZStack {
             mainColor.ignoresSafeArea()
             VStack{
-                HStack{
+                HStack {
                     Text("\(game.currentQuestionIndex + 1)")
-                        .id(game.currentQuestionIndex)
-                        .transition(.blurReplace.combined(with: .opacity))
                         .font(.callout)
                         .multilineTextAlignment(.leading)
                         .bold()
+                        .contentTransition(.numericText(value: Double(game.currentQuestionIndex + 1)))
+                        .animation(.bouncy, value: game.currentQuestionIndex)
                     Text("/  \(game.totalQuestions())")
                         .font(.callout)
                         .multilineTextAlignment(.leading)
@@ -35,10 +35,13 @@ struct ContentView: View {
                 }
                 .padding()
                 Text(game.currentQuestion().questionText)
+                    .foregroundColor(.white)
                     .font(.largeTitle)
                     .bold()
                     .padding(10)
                     .multilineTextAlignment(.leading)
+                    .contentTransition(.opacity)
+                    .animation(.smooth, value: game.currentQuestion().questionText)
                 HStack{
                     Text("\(selectedItem)")
                         .font(.title)

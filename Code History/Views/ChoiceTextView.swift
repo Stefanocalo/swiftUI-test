@@ -28,5 +28,5 @@ struct ChoiceTextView: View {
 }
 
 #Preview {
-    ChoiceTextView(choiceText: "Moth", selectedItem: "Moth")
+    ChoiceTextView(choiceText: "Fly", selectedItem: "Fly")
 }
