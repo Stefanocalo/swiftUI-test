@@ -12,7 +12,6 @@ struct ChoiceTextView: View {
     
     let choiceText: String
     let selectedItem: String
-    let accentColor = Color(red: 48/255, green: 105/255, blue: 240/255)
 
     var body: some View {
         Text(choiceText)
@@ -20,8 +19,8 @@ struct ChoiceTextView: View {
             .multilineTextAlignment(.trailing)
             .padding(22)
             .frame(maxWidth: .infinity, alignment: .center)
-            .background(choiceText == selectedItem ? accentColor : Color.clear)
-            .border(accentColor, width: 4)
+            .background(choiceText == selectedItem ? GameColor.accent : Color.clear)
+            .border(GameColor.accent, width: 4)
             .cornerRadius(5)
             .padding(.horizontal)
     }

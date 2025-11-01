@@ -1,0 +1,95 @@
+//
+//  ContentView.swift
+//  Code History
+//
+//  Created by Stefano Calò on 29/06/25.
+//
+
+import SwiftUI
+import Foundation
+
+struct GameView: View {
+    
+    @State private var selectedItem: String = ""
+    @StateObject private var game = GameViewModel()
+    
+    var body: some View {
+        
+            ZStack {
+                GameColor.main.ignoresSafeArea()
+                VStack{
+                    HStack {
+                        Text("\(game.currentQuestionIndex + 1)")
+                            .font(.callout)
+                            .multilineTextAlignment(.leading)
+                            .bold()
+                            .contentTransition(.numericText(value: Double(game.currentQuestionIndex + 1)))
+                            .animation(.bouncy, value: game.currentQuestionIndex)
+                        Text("/  \(game.totalQuestions)")
+                            .font(.callout)
+                            .multilineTextAlignment(.leading)
+                            .bold()
+                    }
+                    .padding()
+                    Text(game.currentQuestion.questionText)
+                        .foregroundColor(.white)
+                        .font(.largeTitle)
+                        .bold()
+                        .padding(10)
+                        .multilineTextAlignment(.leading)
+                        .contentTransition(.opacity)
+                        .animation(.smooth, value: game.currentQuestion.questionText)
+                    HStack{
+                        Text("\(selectedItem)")
+                            .font(.title)
+                            .fontWeight(.bold)
+                            .padding()
+                            .multilineTextAlignment(.leading)
+                            .id(selectedItem)
+                            .transition(.scale.combined(with: .blurReplace))
+                            .multilineTextAlignment(.leading)
+                    }
+                    .padding(.vertical, 30)
+                    
+                    Spacer()
+                    VStack {
+                        VStack {
+                            ForEach(game.currentQuestion.possibleAnswers, id: \.self) { answer in
+                                Button(action: {
+                                    print("Tapped on option with the text: \(answer)")
+                                    withAnimation(.bouncy) {
+                                        selectedItem = answer
+                                    }
+                                }, label: {
+                                    ChoiceTextView(choiceText: answer, selectedItem: selectedItem)
+                                })
+                                .disabled(selectedItem == answer)
+                                .frame(maxWidth: .infinity)
+                                
+                            }
+                        }
+                        .frame(maxWidth: .infinity)
+                        
+                    }
+                    .frame(maxWidth: .infinity)
+                    VStack {
+                        NextQuestionButton(selectedItem: selectedItem, action: {
+                            let selectedIndex = game.currentQuestion.possibleAnswers.firstIndex(of: selectedItem)!
+                            game.makeGuess(forIndex: selectedIndex)
+                            game.updateGameStatus()
+                            selectedItem = ""
+                            if game.isOver {
+                                print(game.hasWonGame)
+                                print(game.guessPecentage)
+                            }
+                        })
+                    }
+                    .padding(.top)
+                }.foregroundColor(Color.white)
+            }
+        }
+    }
+
+#Preview {
+    GameView()
+}
